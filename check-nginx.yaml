@@ -1,0 +1,17 @@
+---
+- hosts: personal
+  become: true
+  tasks:
+    - name: check nginx
+      systemd:
+        name: nginx
+        state: started
+      register: nginx_status
+    - name: Show nginx status when service is running
+      debug:
+        msg: "Nginx service is running."
+      when: nginx_status.status.ActiveState == 'active'
+    - name: Show nginx status when service is not running or doesn't exist
+      debug:
+        msg: "Nginx service is not running or doesn't exist."
+      when: nginx_status.status.ActiveState != 'active'

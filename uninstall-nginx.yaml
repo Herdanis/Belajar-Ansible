@@ -1,0 +1,15 @@
+---
+- hosts: personal
+  become: true
+  tasks:
+    - name: stop nginx
+      service:
+        name: nginx
+        state: stopped
+      when: ansible_distribution in ["Debian", "Ubuntu"]
+      notify: uninstall nginx
+    - name: uninstall nginx
+      apt:
+        name: nginx
+        state: absent
+      when: ansible_distribution in ["Debian", "Ubuntu"]

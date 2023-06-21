@@ -1,3 +1,4 @@
+---
 - hosts: personal
   become: true
   tasks:
@@ -5,3 +6,9 @@
       apt:
         name: nginx
       when: ansible_distribution in ["Debian","Ubuntu"]
+      notify: run nginx
+  handlers:
+    - name: run nginx
+      service:
+        name: nginx
+        state: started
