@@ -1,0 +1,35 @@
+---
+- hosts: personal
+  become: true
+  tasks:
+    - name: Update apt package manager
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install Java (OpenJDK 11)
+      apt:
+        name: openjdk-11-jdk
+        state: present
+
+    - name: Add Jenkins apt repository key
+      apt_key:
+        url: https://pkg.jenkins.io/debian/jenkins.io.key
+        state: present
+
+    - name: Add Jenkins apt repository
+      apt_repository:
+        repo: deb http://pkg.jenkins.io/debian-stable binary/
+        state: present
+
+    - name: Install Jenkins
+      apt:
+        name: jenkins
+        state: present
+        update_cache: yes
+
+    - name: Start and enable Jenkins service
+      systemd:
+        name: jenkins
+        state: started
+        enabled: true
